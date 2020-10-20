@@ -1,7 +1,21 @@
 const myLibrary = [];
 
-const Book = (author, title, num, status) => {
-  return { author, title, num, status };
+class Book {
+
+  constructor(author, title, num, status) {
+    this.author = author;
+    this.title = title;
+    this.num = num;
+    this.status = status;
+  }
+
+  setStatus() {
+    if(this.status === true) {
+      this.status = 'read';
+    } else {
+      this.status = 'unread';
+    }
+  }
 }
 
 function addBookToLibrary(book) {
@@ -54,13 +68,10 @@ function addBook() {
   const title = document.getElementById('title').value;
   const num = document.getElementById('num').value;
 
-  let status;
-  if (document.getElementById('read').checked) status = 'read';
-  else status = 'unread';
+  let status = document.getElementById('read').checked;
 
-
-  const book = Book(author, title, num, status);
-
+  const book = new Book(author, title, num, status);
+  book.setStatus();
   addBookToLibrary(book);
   displayBook(myLibrary);
   form.reset();
