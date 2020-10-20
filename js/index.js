@@ -1,32 +1,31 @@
 const myLibrary = [];
 
-function Book(author, title, num, status) {
-  this.author = author;
-  this.title = title;
-  this.num = num;
-  this.status = status;
-}
+class Book {
 
-Book.prototype.read_status = function () {
-  let str = '';
-  if (this.status === true) {
-    str += 'read';
-    return str;
+  constructor(author, title, num, status) {
+    this.author = author;
+    this.title = title;
+    this.num = num;
+    this.status = status;
   }
 
-  str += 'unread';
-  return str;
-};
+  setStatus() {
+    if(this.status === true) {
+      this.status = 'read';
+    } else {
+      this.status = 'unread';
+    }
+  }
+}
 
 function addBookToLibrary(book) {
   myLibrary.push(book);
-  localStorage.setItem('localbook', JSON.stringify(myLibrary));
 }
 
-function displayBook(itemsJsonArray) {
+function displayBook(books) {
   const newBook = document.getElementById('tableBody');
   let str = '';
-  itemsJsonArray.forEach((bokk, index) => {
+  books.forEach((bokk, index) => {
     str += `
     <tr>
       <td> ${index + 1}</td>
@@ -51,6 +50,7 @@ function change(elem, index) {
   myLibrary[index].status = elem.value;
 }
 
+
 function deleted(index) {
   myLibrary.splice(index, 1);
   displayBook(myLibrary);
@@ -63,25 +63,19 @@ const preventRefresh = (event) => {
   event.preventDefault();
 };
 
-function addbook() {
+function addBook() {
   const author = document.getElementById('author').value;
   const title = document.getElementById('title').value;
   const num = document.getElementById('num').value;
 
-  let status;
-  if (document.getElementById('read').checked) status = true;
-  else status = false;
-
+  let status = document.getElementById('read').checked;
 
   const book = new Book(author, title, num, status);
-  book.status = book.read_status();
+  book.setStatus();
   addBookToLibrary(book);
   displayBook(myLibrary);
   form.reset();
 }
 
-form.addEventListener('submit', addbook);
+form.addEventListener('submit', addBook);
 form.addEventListener('submit', preventRefresh);
-const itemsJsonstr = localStorage.getItem('localbook');
-const itemsJsonArray = JSON.parse(itemsJsonstr);
-displayBook(itemsJsonArray);
